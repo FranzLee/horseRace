@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-Hant-TW" lang="zh-Hant-TW">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border: 1px solid #d3d3d3;
+    background-color: #f1f1f1;
+} 
+.styleTopic {
+    color: rgba(153,153,255,1);
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+ .styleText {
+    color: rgba(153, 153, 255, 1);
+    font-size: medium;
+}
+</style>
+</head>
+<body onload="startGame()">
+<script>
+var squares = [];
+
+function startGame() {
+    myGameArea.start();
+    var firstY = 4 * getRandom(50) + 40;
+    squares.push(new square(60, firstY, 40, 40, -4, -4, "red", 1));
+    squares.push(new square(60, firstY + 200, 40, 40, -4, -4, "orange", 2));
+    squares.push(new square(60, firstY + 400, 40, 40, -4, -4, "green", 3));
+    squares.push(new square(60, firstY + 600, 40, 40, -4, -4, "skyBlue", 4));
+
+    squares.push(new square(0, 0, myGameArea.canvas.width, 40, 0, 0, "black")); //up
+    squares.push(new square(0, 40, 40, myGameArea.canvas.height - 40, 0, 0)); //left
+    squares.push(new square(40, myGameArea.canvas.height - 40, myGameArea.canvas.width - 40, 40, 0, 0)); //down
+    squares.push(new square(myGameArea.canvas.width - 144, 184, 144, myGameArea.canvas.height - (40 + 184), 0, 0)); //right
+
+    squares.push(new square(152, 40, 284, 260, 0, 0));
+    squares.push(new square(152, 372, 284, 244, 0, 0));
+    squares.push(new square(584, 40, 244, 332, 0, 0));
+    squares.push(new square(436, 472, 540, 336, 0, 0));
+    squares.push(new square(40, 716, 152, 326, 0, 0));
+    squares.push(new square(1124, 612, 60, 428, 0, 0));
+    squares.push(new square(1424, 612, 60, 428, 0, 0));
+    squares.push(new square(1288, 960, 40, 80, 0, 0));
+    squares.push(new square(1628, 372, 252, 464, 0, 0));
+    squares.push(new square(1052, 188, 108, 108, 0, 0));
+    squares.push(new square(1376, 196, 148, 96, 0, 0));
+    squares.push(new square(1136, 376, 300, 52, 0, 0));
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 1920;
+        this.canvas.height = 1080;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.interval = setInterval(updateGameArea, 20);
+    }, 
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    stop : function() {
+        clearInterval(this.interval);
+    }
+}
+
+function updateGameArea() {
+    myGameArea.clear();
+    for(i = 0; i < squares.length; i++) {
+        squares[i].updateLocation();
+        squares[i].x += squares[i].minusX;
+        squares[i].y += squares[i].minusY;
+        squares[i].update();
+    }
+}
+
+class square {
+    constructor(x, y, width, height, minusX, minusY, color, blockNumber) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.minusX = minusX;
+        this.minusY = minusY;
+        this.color = color;
+        this.blockNumber = blockNumber;
+    }
+
+    updateLocation() {
+        if(/**( this.x + this.width > myGameArea.canvas.width) || */(this.x < 0)) {
+            this.minusX *= -1;
+        }
+        if((this.y + this.height > myGameArea.canvas.height) || (this.y < 0)) {
+            this.minusY *= -1;
+        }
+        for(var j = 0; j < squares.length; j++) { // 確認是否與其他方塊碰撞
+            if(!((this.x == squares[j].x) && (this.y == squares[j].y))) { // 確認這個方塊不是自己
+                if((this.x + this.width == squares[j].x) || (squares[j].x + squares[j].width == this.x)) {   //x重疊
+                    if(((squares[j].y - this.y <= this.height) && (squares[j].y - this.y >= 0)) || ((this.y - squares[j].y <= squares[j].height) && (this.y - squares[j].y >= 0))) {
+                        if(this.x > squares[j].x) {
+                            this.minusX = positiveNumber(this.minusX);
+                            squares[j].minusX = negetiveNumber(squares[j].minusX);
+                        }
+                        else {
+                            this.minusX = negetiveNumber(this.minusX);
+                            squares[j].minusX = positiveNumber(squares[j].minusX);    
+                        }
+                        // this.minusX *= -1;
+                        // squares[j].minusX *= -1;
+                        console.log("xTurn");
+                    }        
+                }
+                if((this.y + this.height == squares[j].y) || (squares[j].y + squares[j].height == this.y)) {   //y重疊
+                    if(((squares[j].x - this.x <= this.width) && (squares[j].x - this.x >= 0)) || ((this.x - squares[j].x <= squares[j].width) && (this.x - squares[j].x >= 0))) {
+                        if(this.y > squares[j].y) {
+                            this.minusY = positiveNumber(this.minusY);
+                            squares[j].minusY = negetiveNumber(squares[j].minusY);
+                        }
+                        else {
+                            this.minusY = negetiveNumber(this.minusY);
+                            squares[j].minusY = positiveNumber(squares[j].minusY);    
+                        }
+                        // this.minusY *= -1;
+                        // squares[j].minusY *= -1;
+                        console.log("yTurn");
+                    }
+                }
+                /**
+                if (!((squares[j].y > (this.y + this.height)) || ((squares[j].y + squares[j].height) < this.y) || (squares[j].x > (this.x + this.width)) || ((squares[j].x + squares[j].width) < this.x))) { // 有碰撞就會進來
+                    x = 1;
+                }
+                */
+            }
+        }
+    }
+
+    update() {
+        myGameArea.context.fillStyle = this.color;
+        myGameArea.context.fillRect(this.x, this.y, this.width, this.height);
+        if(this.x + this.width > myGameArea.canvas.width) {
+            myGameArea.stop();
+        }
+    }
+}  
+  
+function absolute(x) {
+    if(x < 0) {
+        x = -x;
+    }
+    return x;
+}
+
+function positiveNumber(x) {
+    return absolute(x);
+}
+
+function negetiveNumber(x) {
+    if(x > 0) {
+        x = -x;
+    }
+    return x;
+}
+
+function getRandom(maxPoint) {
+    var m = maxPoint;
+    var x = Math.random();
+    x = Math.floor(x * m) + 1;
+    return x;
+}
+
+</script>
+
+<p class="styleText" id="leader">Use arrow keys or buttons to control</p>
+<p class="styleText" id="scores"></p>
+<p class="styleText" id="levels"></p>
+
+</body>
+</html>
