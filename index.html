@@ -45,9 +45,9 @@ canvas {
 <p class="styleText" id="money"></p>
 <input type="text" placeholder="請輸入下注金額" id="betMoney" size="20" style="font-size: 5em;"><br><br>
 <input type="text" placeholder="請預測冠軍" id="betNumber" size="20" maxlength="1" style="font-size: 5em;"><br><br>
-<p class="styleText" id="guide">1為紅色，2為橘色，3為綠色，4為藍色</p>
-<input type="button" id="button" value="確定" style="font-size: 5em;" class="styledButton" onclick="require()">
-<input type="button" class="styledButton" id="stop" value="立即停止" style="font-size: 5em;" onclick="playerAskToStop()">
+<p class="styleText" id="guide">1 is red, 2 is orange, 3 is green, 4 is blue.</p>
+<input type="button" id="button" value="send" style="font-size: 5em;" class="styledButton" onclick="require()">
+<input type="button" class="styledButton" id="stop" value="stop NOW" style="font-size: 5em;" onclick="playerAskToStop()">
 <p class="styleText" id="warning"></p>
 
 <script>
@@ -253,7 +253,7 @@ function require() {
         document.getElementById("warning").innerHTML = "";
     }
     else {
-        document.getElementById("warning").innerHTML = "您的輸入有誤!請重新檢查後輸入!";
+        document.getElementById("warning").innerHTML = "ERROR!";
     }
 }
 
@@ -274,7 +274,7 @@ function playerAskToStop() {
         end();
     }
     else if(nowPlayMode == "setting") {
-        document.getElementById("warning").innerHTML = "可以不要亂按停止鍵嗎?";
+        document.getElementById("warning").innerHTML = "DON'T press the STOP button for NO REASON!";
     }
 }
 
