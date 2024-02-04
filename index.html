@@ -63,13 +63,13 @@ var nowPlayMode = "setting";
 
 function startGame() {
     myGameArea.start();
-    var firstY = 4 * getRandom(50) + 40;
-    squares.push(new square(60, firstY, 40, 40, -4, -4, "red", 1));
-    squares.push(new square(60, firstY + 200, 40, 40, -4, -4, "orange", 2));
-    squares.push(new square(60, firstY + 400, 40, 40, -4, -4, "green", 3));
-    squares.push(new square(60, firstY + 600, 40, 40, -4, -4, "skyBlue", 4));
+    var firstY = 4 * getRandom(30) + 40;
+    squares.push(new square(60, firstY, 40, 40, randomPositiveNegetive(4), randomPositiveNegetive(4), "red", 1));
+    squares.push(new square(60, firstY + 48, 40, 40, randomPositiveNegetive(4), randomPositiveNegetive(4), "orange", 2));
+    squares.push(new square(60, firstY + 96, 40, 40, randomPositiveNegetive(4), randomPositiveNegetive(4), "green", 3));
+    squares.push(new square(60, firstY + 148, 40, 40, randomPositiveNegetive(4), randomPositiveNegetive(4), "skyBlue", 4));
 
-    finalLine = new square(myGameArea.canvas.width - 100, 40, 20, 204 - 40, 0, 0, "yellow");
+    finalLine = new square(myGameArea.canvas.width - 100, 40, 20, 204 - 40, 0, 0, "#9D9D9D");
     squares.push(new square(0, 0, myGameArea.canvas.width, 40, 0, 0, "black")); //up
     squares.push(new square(0, 40, 40, myGameArea.canvas.height - 40, 0, 0)); //left
     squares.push(new square(40, myGameArea.canvas.height - 40, myGameArea.canvas.width - 40, 40, 0, 0)); //down
@@ -275,6 +275,16 @@ function playerAskToStop() {
     }
     else if(nowPlayMode == "setting") {
         document.getElementById("warning").innerHTML = "可以不要亂按停止鍵嗎?";
+    }
+}
+
+function randomPositiveNegetive(input) {
+    var x = getRandom(2);
+    if(x == 1) {
+        return positiveNumber(input);
+    }
+    else if(x == 2) {
+        return negetiveNumber(input);
     }
 }
 
